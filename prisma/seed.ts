@@ -7,17 +7,17 @@ const prisma = new PrismaClient({ adapter })
 
 async function main() {
   // --- Admin user ---
-  const hashedPassword = await bcrypt.hash('admin123', 10)
+  const hashedPassword = await bcrypt.hash('admin', 10)
   await prisma.user.upsert({
-    where: { email: 'admin@telemetria.com' },
-    update: {},
+    where: { email: 'admin' },
+    update: { password: await bcrypt.hash('admin', 10) },
     create: {
-      email: 'admin@telemetria.com',
+      email: 'admin',
       password: hashedPassword,
       nombre: 'Admin',
     },
   })
-  console.log('Admin user created: admin@telemetria.com / admin123')
+  console.log('Admin user created: admin / admin')
 
   // --- Concesionario ---
   const concesionario = await prisma.concesionario.upsert({

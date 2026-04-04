@@ -33,8 +33,8 @@ export default function LoginPage() {
         <h1 className="text-2xl font-bold mb-6 text-center">Telemetria Posventa</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input id="email" name="email" type="email" required className="w-full px-3 py-2 border border-gray-300 rounded-md" />
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
+            <input id="email" name="email" type="text" required className="w-full px-3 py-2 border border-gray-300 rounded-md" />
           </div>
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
