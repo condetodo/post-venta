@@ -1,7 +1,15 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm)"
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm)",
+      "Bash(npm install:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(node -e \"const pkg = require\\(''./package.json''\\); const deps = [''prisma'',''@prisma/client'',''next-auth'',''@auth/prisma-adapter'',''bcryptjs'',''xlsx'',''recharts'',''lucide-react'',''@anthropic-ai/sdk'']; const devDeps = [''@types/bcryptjs'']; deps.forEach\\(d => console.log\\(pkg.dependencies[d] ? ''OK: ''+d : ''MISSING: ''+d\\)\\); devDeps.forEach\\(d => console.log\\(pkg.devDependencies[d] ? ''OK \\(dev\\): ''+d : ''MISSING \\(dev\\): ''+d\\)\\);\")",
+      "Bash(npx prisma:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npx next:*)",
+      "Bash(npx tsc:*)"
     ]
   }
 }
