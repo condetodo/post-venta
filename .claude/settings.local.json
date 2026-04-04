@@ -9,7 +9,9 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(npx next:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(ls src/generated/prisma/*.ts)",
+      "Bash(node -e \"const { PrismaClient } = require\\(''''./src/generated/prisma/client''''\\); console.log\\(PrismaClient.toString\\(\\).substring\\(0, 300\\)\\)\")"
     ]
   }
 }
