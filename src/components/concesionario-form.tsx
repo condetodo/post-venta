@@ -97,7 +97,7 @@ export default function ConcesionarioForm({
   }
 
   const inputClass =
-    'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-blue focus:outline-none focus:ring-1 focus:ring-brand-blue'
+    'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-blue focus:outline-none focus:ring-1 focus:ring-brand-blue'
   const labelClass = 'block text-sm font-medium text-gray-700 mb-1'
 
   return (
