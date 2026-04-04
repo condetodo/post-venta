@@ -33,9 +33,11 @@ model Concesionario {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  clientes  Cliente[]
-  campanas  Campana[]
-  registros RegistroTelemetria[]
+  clientes      Cliente[]
+  campanas      Campana[]
+  registros     RegistroTelemetria[]
+  vehiculos     VehiculoStock[]
+  oportunidades Oportunidad[]
 }
 
 model Cliente {
@@ -59,6 +61,7 @@ model Cliente {
   concesionario   Concesionario @relation(fields: [concesionarioId], references: [id], onDelete: Cascade)
   concesionarioId String
   campanaClientes CampanaCliente[]
+  oportunidades   Oportunidad[]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -102,6 +105,45 @@ model CampanaCliente {
   clienteId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model VehiculoStock {
+  id       String  @id @default(cuid())
+  marca    String
+  modelo   String
+  version  String?
+  anio     Int
+  tipo     String  // "0km" | "usado"
+  precio   Float
+  moneda   String  @default("ARS")
+  color    String?
+  estado   String  @default("disponible") // "disponible" | "reservado" | "vendido"
+  notas    String?
+
+  concesionario   Concesionario @relation(fields: [concesionarioId], references: [id], onDelete: Cascade)
+  concesionarioId String
+  oportunidades   Oportunidad[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Oportunidad {
+  id             String  @id @default(cuid())
+  estado         String  @default("oportunidad") // "oportunidad" | "contactado" | "interesado" | "venta" | "perdida"
+  scoreMatching  Float
+  mensajeOferta  String?
+  notas          String?
+
+  cliente         Cliente        @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  clienteId       String
+  vehiculo        VehiculoStock  @relation(fields: [vehiculoId], references: [id], onDelete: Cascade)
+  vehiculoId      String
+  concesionario   Concesionario  @relation(fields: [concesionarioId], references: [id], onDelete: Cascade)
+  concesionarioId String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([clienteId, vehiculoId])
 }
 
 model RegistroTelemetria {
