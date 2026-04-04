@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  nombre    String
+  createdAt DateTime @default(now())
+}
+
+model Concesionario {
+  id               String   @id @default(cuid())
+  nombre           String
+  ciudad           String
+  marca            String
+  elevadores       Int
+  horasOperativas  Int      @default(10)
+  diasOperativos   Int      @default(22)
+  costoFijoMensual Float    @default(0)
+  ticketPromedio   Float    @default(0)
+  ocupacionActual  Float    @default(50)
+  mixMecanica      Float    @default(40)
+  mixChapa         Float    @default(30)
+  mixExpress       Float    @default(30)
+  notas            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  clientes  Cliente[]
+  campanas  Campana[]
+  registros RegistroTelemetria[]
+}
+
+model Cliente {
+  id              String    @id @default(cuid())
+  nombre          String
+  telefono        String?
+  email           String?
+  marca           String
+  modelo          String
+  anio            Int
+  patente         String?
+  kmActual        Int?
+  ultimoService   DateTime?
+  cantidadVisitas Int       @default(0)
+  ticketAcumulado Float     @default(0)
+  segmento        String?
+  scoreRenovacion Float?
+  diasSinVisita   Int?
+  estado          String    @default("activo")
+
+  concesionario   Concesionario @relation(fields: [concesionarioId], references: [id], onDelete: Cascade)
+  concesionarioId String
+  campanaClientes CampanaCliente[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([concesionarioId, patente])
+}
+
+model Campana {
+  id                  String   @id @default(cuid())
+  nombre              String
+  tipo                String
+  segmento            String
+  canal               String
+  estado              String   @default("borrador")
+  mensajeTemplate     String?
+  mensajeIA           String?
+  argumento           String?
+  clientesTarget      Int      @default(0)
+  clientesContactados Int      @default(0)
+  turnosAgendados     Int      @default(0)
+  turnosCompletados   Int      @default(0)
+  ventasGeneradas     Int      @default(0)
+  ingresoGenerado     Float    @default(0)
+
+  concesionario   Concesionario @relation(fields: [concesionarioId], references: [id], onDelete: Cascade)
+  concesionarioId String
+  campanaClientes CampanaCliente[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model CampanaCliente {
+  id             String   @id @default(cuid())
+  estado         String   @default("pendiente")
+  mensajeEnviado String?
+  respuesta      String?
+  montoGenerado  Float    @default(0)
+
+  campana   Campana @relation(fields: [campanaId], references: [id], onDelete: Cascade)
+  campanaId String
+  cliente   Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  clienteId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model RegistroTelemetria {
+  id                 String   @id @default(cuid())
+  fecha              DateTime @default(now())
+  turnosDelDia       Int
+  elevadoresUsados   Int
+  ingresoDia         Float
+  mixMecanica        Float
+  mixChapa           Float
+  mixExpress         Float
+  oportunidadesVenta Int      @default(0)
+  ventasCerradas     Int      @default(0)
+
+  concesionario   Concesionario @relation(fields: [concesionarioId], references: [id], onDelete: Cascade)
+  concesionarioId String
+}
