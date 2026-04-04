@@ -11,7 +11,10 @@
       "Bash(npx next:*)",
       "Bash(npx tsc:*)",
       "Bash(ls src/generated/prisma/*.ts)",
-      "Bash(node -e \"const { PrismaClient } = require\\(''''./src/generated/prisma/client''''\\); console.log\\(PrismaClient.toString\\(\\).substring\\(0, 300\\)\\)\")"
+      "Bash(node -e \"const { PrismaClient } = require\\(''''./src/generated/prisma/client''''\\); console.log\\(PrismaClient.toString\\(\\).substring\\(0, 300\\)\\)\")",
+      "Bash(node -e \"console.log\\(require\\(''crypto''\\).randomBytes\\(32\\).toString\\(''hex''\\)\\)\")",
+      "Bash(npx tsx -e \":*)",
+      "Bash(npx tsx:*)"
     ]
   }
 }
