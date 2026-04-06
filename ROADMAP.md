@@ -1,8 +1,8 @@
 # Telemetria Posventa — Roadmap
 
-## Estado actual: MVP en desarrollo
+## Estado actual: 4 fases completadas
 
-**Fecha ultima actualizacion:** 2026-04-04
+**Fecha ultima actualizacion:** 2026-04-06
 
 ---
 
@@ -10,27 +10,50 @@
 
 ### Infraestructura
 - [x] Proyecto Next.js 16 + React 19 + Tailwind CSS v4 scaffoldeado
-- [x] Prisma v7 con schema completo (6 modelos: User, Concesionario, Cliente, Campana, CampanaCliente, RegistroTelemetria)
+- [x] Prisma v7 con schema completo (8 modelos: User, Concesionario, Cliente, Campana, CampanaCliente, RegistroTelemetria, VehiculoStock, Oportunidad)
 - [x] PostgreSQL en Railway (online, schema synced, seed cargado)
 - [x] Prisma v7 con PrismaPg adapter configurado
 - [x] NextAuth.js con CredentialsProvider + JWT sessions
 - [x] Login page + middleware de proteccion de rutas
-- [x] Proyecto preparado para deploy en Vercel (postinstall, serverExternalPackages, middleware compatible)
+- [x] Proyecto deployado en Vercel
 
-### UI y Funcionalidades
+### Fase 1: Diagnostico de Brecha
+- [x] Calculo de brecha: capacidad instalada vs ocupacion real
+- [x] Grilla visual de elevadores (llenos/vacios)
+- [x] Gauge semicircular de absorcion de costos fijos (Recharts)
+- [x] Chart de mix actual vs ideal (Recharts BarChart)
+- [x] Alerta de brecha ("Te faltan X autos por dia")
+- [x] Resumen ejecutivo generado por IA (Claude API con fallback sin API key)
+- [x] Dashboard con KPIs agregados (brecha total, ingreso no capturado, lista de concesionarios)
+
+### Fase 2: Pipeline de Activacion
+- [x] Segmentacion automatica de clientes por reglas deterministas (5 segmentos)
+- [x] Generacion de mensajes WhatsApp con Claude API (variantes A/B)
+- [x] Vista kanban de campanas: Borrador → Activa → Pausada → Completada
+- [x] Tracking individual por cliente: pendiente → enviado → respondio → turno → completado
+- [x] Boton copiar mensaje personalizado (para pegar en WhatsApp)
+
+### Fase 3: Matching Comercial
+- [x] Carga manual de stock de vehiculos (0km y usados) + importacion desde Excel
+- [x] Cruce cliente-stock por antiguedad, km y scoring (0-100 pts)
+- [x] Generacion de oferta concreta via IA
+- [x] Tracking de oportunidades: generada → contactado → interesado → vendido/descartado
+
+### Fase 4: Telemetria de Resultados
+- [x] Registro diario de metricas (formulario de carga manual)
+- [x] Dashboard 4 cuadrantes: ingresos, ocupacion, mix de servicios, brecha
+- [x] Graficos temporales con Recharts (LineChart, AreaChart, StackedBarChart, BarChart)
+- [x] KPIs mensuales: ingreso total, ocupacion promedio, turnos totales, ventas cerradas
+- [x] Selector de mes calendario
+- [x] Edicion y eliminacion de registros
+
+### UI y Funcionalidades generales
 - [x] Layout con sidebar (Telemetria branding, nav Dashboard + Concesionarios, logout)
 - [x] CRUD completo de concesionarios (API + UI: lista, crear, detalle/hub)
 - [x] Importacion de clientes desde Excel/CSV (upload, preview, mapeo de columnas, deduplicacion)
-- [x] Modulo de Diagnostico (MVP core):
-  - Calculo de brecha: capacidad instalada vs ocupacion real
-  - Grilla visual de elevadores (llenos/vacios)
-  - Gauge semicircular de absorcion de costos fijos (Recharts)
-  - Chart de mix actual vs ideal (Recharts BarChart)
-  - Alerta de brecha ("Te faltan X autos por dia")
-  - Resumen ejecutivo generado por IA (Claude API con fallback sin API key)
-- [x] Dashboard con KPIs agregados (brecha total, ingreso no capturado, lista de concesionarios)
 - [x] Seed data: Automotores del Sur (Toyota, Neuquen) + 50 clientes variados
 - [x] Utilidades: formatARS, formatPercent, formatNumber (formato argentino)
+- [x] Archivos Excel de ejemplo para clientes y stock
 
 ### Datos de prueba (seed)
 - Admin: `admin@telemetria.com` / `admin123`
@@ -39,46 +62,7 @@
 
 ---
 
-## Pendiente - Bloqueantes para produccion
-
-### Bug: Login no funciona
-- **Problema:** El login con NextAuth.js redirige de vuelta a /login en vez de ir al dashboard
-- **Posible causa:** Compatibilidad bcryptjs v3 con el hash guardado, o problema con NextAuth + Next.js 16
-- **Diagnostico pendiente:** Verificar que bcrypt.compare() funcione con el hash del seed, revisar logs del server durante el login
-- **Prioridad:** CRITICA — sin esto no se puede usar la app
-
-### Deploy a Vercel
-- **Estado:** Proyecto preparado pero NO deployado
-- **Pendiente:**
-  - Resolver bug de login primero
-  - Configurar env vars en Vercel: DATABASE_URL, NEXTAUTH_SECRET, NEXTAUTH_URL (url de produccion), ANTHROPIC_API_KEY
-  - Ejecutar deploy via Vercel MCP o `vercel deploy`
-  - Repo GitHub: https://github.com/condetodo/post-venta
-
----
-
-## Pendiente - Proximas funcionalidades
-
-### Fase 2: Pipeline de Activacion (/concesionarios/[id]/pipeline)
-- [ ] Segmentacion automatica de clientes por reglas deterministas:
-  - service_vencido (>6 meses), km_alto, garantia_prox (<3 anios), renovacion (>4 anios), express
-- [ ] Generacion de mensajes WhatsApp con Claude API (variantes A/B)
-- [ ] Vista kanban de campanas: Borrador → Activa → Pausada → Completada
-- [ ] Tracking individual por cliente: pendiente → enviado → respondio → turno → completado
-- [ ] Boton copiar mensaje personalizado (para pegar en WhatsApp)
-
-### Fase 3: Matching Comercial (/concesionarios/[id]/matching)
-- [ ] Carga manual de stock de vehiculos (0km y usados)
-- [ ] Cruce cliente-stock por antiguedad y km
-- [ ] Generacion de oferta concreta via IA ("Tu Corolla 2019 cotizado en $X, tenemos SW4 en stock...")
-- [ ] Flag/notificacion al asesor comercial
-- [ ] Tracking de oportunidades de venta generadas desde posventa
-
-### Fase 4: Telemetria de Resultados (/concesionarios/[id]/telemetria)
-- [ ] Registro diario de metricas (formulario de carga)
-- [ ] Dashboard 4 cuadrantes: ingresos, absorcion, productividad, ventas atribuidas
-- [ ] Graficos temporales con Recharts
-- [ ] KPIs: tasa de conversion, ROI del sistema
+## Pendiente — Mejoras futuras
 
 ### Mejoras generales
 - [ ] Edicion de concesionario (formulario pre-llenado)
@@ -103,7 +87,7 @@
 | Excel | SheetJS (xlsx) | 0.18.5 |
 | Icons | Lucide React | 1.7.0 |
 | IA | Anthropic SDK | 0.82.0 |
-| Deploy | Vercel (pendiente) | — |
+| Deploy | Vercel | Activo |
 
 ## Paleta de colores
 - Naranja (alerta/brecha): `#D85A30` → `brand-orange`
