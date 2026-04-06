@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { Prisma } from '@prisma/client'
 
 export async function PUT(
   req: NextRequest,
@@ -54,17 +53,14 @@ export async function PUT(
     })
 
     return NextResponse.json(updated)
-  } catch (e) {
-    if (
-      e instanceof Prisma.PrismaClientKnownRequestError &&
-      e.code === 'P2002'
-    ) {
+  } catch (err: unknown) {
+    if (err instanceof Error && err.message.includes('Unique constraint')) {
       return NextResponse.json(
         { error: 'Ya existe un registro para esa fecha' },
         { status: 409 }
       )
     }
-    throw e
+    throw err
   }
 }
 
