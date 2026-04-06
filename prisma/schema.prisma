@@ -160,4 +160,6 @@ model RegistroTelemetria {
 
   concesionario   Concesionario @relation(fields: [concesionarioId], references: [id], onDelete: Cascade)
   concesionarioId String
+
+  @@unique([concesionarioId, fecha])
 }
